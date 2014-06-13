@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sinatra', '~> 1.4.5'
   spec.add_dependency 'dogapi', '~> 1.10.0'
   spec.add_dependency 'dotenv', '~> 0.11.1'
+  spec.add_dependency 'chronic', '~> 0.10.2'
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"

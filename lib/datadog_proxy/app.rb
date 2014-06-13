@@ -1,8 +1,11 @@
 require 'datadog_proxy'
 require 'sinatra'
+require 'chronic'
 
 module DatadogProxy
   class App < Sinatra::Application
+    class Error < StandardError; end
+
     def initialize(*args)
       super(*args)
     end
@@ -27,13 +30,24 @@ module DatadogProxy
     get '/graphs/snapshot' do
       options = {}
       options[:query] = params[:query]
-      options[:start] = Time.at(params[:start].to_i) if params[:start]
-      options[:end] = Time.at(params[:end].to_i) if params[:end]
+      options[:start] = _parse_time(params[:start]) if params[:start]
+      options[:end] = _parse_time(params[:end]) if params[:end]
       options[:duration] = params[:duration].to_i if params[:duration]
-
+p options
       url = client.graph_snapshot_url(options)
 
       redirect url, 302
+    end
+
+    private
+    def _parse_time(str)
+      if /^\d+$/ =~ str
+        Time.at(str.to_i)
+      else
+        time = Chronic.parse(str)
+        return time if time
+        raise Error, "Cannot parse time (#{str})"
+      end
     end
   end
 end
