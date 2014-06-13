@@ -33,7 +33,7 @@ module DatadogProxy
       options[:start] = _parse_time(params[:start]) if params[:start]
       options[:end] = _parse_time(params[:end]) if params[:end]
       options[:duration] = params[:duration].to_i if params[:duration]
-p options
+      
       url = client.graph_snapshot_url(options)
 
       redirect url, 302
