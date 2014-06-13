@@ -9,12 +9,10 @@ module DatadogProxy
 
     def initialize(api_key, app_key)
       @client = Dogapi::Client.new(api_key, app_key)
-      @graph_snapshot_url_cache = {}
     end
 
     def graph_snapshot_url(options)
-      # TODO: cap cache size or use external storage like memcached
-      @graph_snapshot_url_cache[options.hash] ||= _graph_snapshot_url(options)
+      _graph_snapshot_url(options)
     end
 
     private
