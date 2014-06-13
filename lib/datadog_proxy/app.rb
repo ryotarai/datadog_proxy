@@ -28,6 +28,10 @@ module DatadogProxy
     end
 
     get '/graphs/snapshot' do
+      if params.empty?
+        return erb(:snapshot)
+      end
+
       options = {}
       options[:query] = params[:query]
       options[:start] = _parse_time(params[:start]) if params[:start]

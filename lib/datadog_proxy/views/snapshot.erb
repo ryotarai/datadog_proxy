@@ -1,0 +1,32 @@
+<html>
+<body>
+<form id="form">
+  <input type="text" placeholder="query" name="query" value="system.load.1{*}">
+  <input type="text" placeholder="start" name="start">
+  <input type="text" placeholder="end" name="end" value="now">
+  <input type="text" placeholder="duration" name="duration" value="3600">
+  <input type="submit">
+</form>
+
+<img id="graph" src="">
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+$(function() {
+  $("#form").bind("submit", function() {
+    var url = "/graphs/snapshot?";
+    var names = ["query", "start", "end", "duration"];
+    for (var i = 0; i < names.length; i++) {
+      var name = names[i];
+      var value = $("#form input[name=" + name + "]").val();
+      if (value != "") {
+        url += name + "=" + encodeURIComponent(value) + "&";
+      }
+    }
+    $("#graph").attr("src", url);
+    return false;
+  });
+});
+</script>
+</body>
+</html>
