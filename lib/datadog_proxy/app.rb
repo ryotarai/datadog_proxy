@@ -8,7 +8,6 @@ module DatadogProxy
     end
 
     def client
-      p :hello
       @_client ||= DatadogClient.new(ENV['DATADOG_API_KEY'], ENV['DATADOG_APP_KEY'])
     end
 

@@ -1,5 +1,7 @@
 require 'datadog_proxy'
 require 'dogapi'
+require 'timeout'
+require 'net/https'
 
 module DatadogProxy
   class DatadogClient
@@ -13,9 +15,6 @@ module DatadogProxy
     def graph_snapshot_url(options)
       # TODO: cap cache size or use external storage like memcached
       @graph_snapshot_url_cache[options.hash] ||= _graph_snapshot_url(options)
-
-      # Append time to avoid the graph is cached.
-      "#{@graph_snapshot_url_cache[options.hash]}?#{Time.now.to_i}"
     end
 
     private
@@ -47,7 +46,28 @@ module DatadogProxy
         raise Error, "Failed to get a snapshot."
       end
 
-      response[1]['snapshot_url']
+      snapshot_url = response[1]['snapshot_url']
+      timeout(10) do
+        _wait_for_generating(snapshot_url)
+      end
+
+      snapshot_url
+    end
+
+    def _wait_for_generating(url)
+      while true
+        uri = URI.parse(url)
+        req = Net::HTTP::Head.new(uri.path)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        res = http.start do
+          http.request(req)
+        end
+        if res.code == '200' && res["Content-Length"].to_i > 1024
+          return
+        end
+        sleep 1
+      end
     end
   end
 end
