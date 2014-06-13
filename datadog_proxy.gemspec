@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "datadog_proxy"
   spec.version       = DatadogProxy::VERSION
   spec.authors       = ["Ryota Arai"]
-  spec.email         = ["ryota-arai@cookpad.com"]
+  spec.email         = ["ryota.arai@gmail.com"]
   spec.summary       = %q{A proxy to datadog API server.}
   spec.homepage      = ""
   spec.license       = "MIT"
